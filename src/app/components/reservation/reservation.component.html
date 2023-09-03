@@ -301,8 +301,9 @@
                                 </div>
                                 <div class="transformers-right">
                                     <div class="transformers-bottom">
-                                        <select class="custom-select" formControlName="salle" name="salle">
-                                            <option *ngFor="let proj of projectionList" [value]="proj">
+                                        <select class="custom-select"  (change)="setProjection($event)">
+                                            <option value="">select projection</option>
+                                            <option *ngFor="let proj of projectionList"  [value]="proj.idProjection">
                                                 {{proj.dateProjection}} {{proj.timeProjection}}
 
                                             </option>
@@ -316,7 +317,7 @@
                     </div>
                 </div>
             </div>
-            <a class="theme-btn" routerLink="/reser"><i class="icofont icofont-ticket"></i> BUY
+            <a class="theme-btn" (click)="goToProjection()"><i class="icofont icofont-ticket"></i> BUY
                 TICKET</a>
         </div>
     </div>

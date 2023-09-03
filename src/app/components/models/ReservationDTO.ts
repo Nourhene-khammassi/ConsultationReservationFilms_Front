@@ -6,7 +6,6 @@ export class ReservationDTO {
     idReservation!: number;
     nbPlaces!: any;
     dateReservation!: string;
-    //projection!: Projection;
-    salle!: Salle;
-    places!: any;
+    projection!: Projection;
+    places!: Places[];
 }

@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: "salle", component: SalleComponent },
   { path: "reservationFilm/:idFilm", component: ReservationComponent },
 
-  { path: "reser", component: ReserComponent },
+  { path: "reser/:idProjection", component: ReserComponent },
 
 
 

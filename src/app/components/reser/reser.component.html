@@ -16,10 +16,9 @@
 
                                 <!-- Autres tables de sièges -->
                             </div>
-                            <div class="ticket-box-table d-flex justify-content-center
-                            ">
+                            <!-- <div class="ticket-box-table d-flex justify-content-center">
 
-                                <!-- <table>
+                                <table>
                                     <tr *ngFor="let place of places">
                                         <td title="{{ place.idPlace }}">
                                             <input type="checkbox" value={{place.matricule}}
@@ -29,38 +28,26 @@
                                     </tr>
 
 
-                                </table> -->
+                                </table>
 
-                                <div class="container">
-                                    <div class="row">
-                                        <ng-container *ngFor="let place of places; let i = index">
-                                            <div class="col-1">
-                                                <div class="card">
-                                                    <div class="card-body">
-
-                                                        <input type="checkbox" value={{place.matricule}}
-                                                            formControlName="selectedPlace"
-                                                            (click)="addToTable(place.matricule)">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="w-100" *ngIf="(i + 1) % 10 === 0 || (i === places.length - 1)">
-                                            </div>
+                            </div> -->
+                            <div class="ticket-box-table d-flex justify-content-center">
+                                <table>
+                                  <ng-container *ngFor="let row of places; let i = index">
+                                    <ng-container *ngIf="i % 10 === 0">
+                                      <tr>
+                                        <ng-container *ngFor="let place of places.slice(i, i + 10); let j = index">
+                                          <td title="{{ place.idPlace }}">
+                                            <input type="checkbox" [value]="place.matricule"  (click)="addToTable(place)">
+                                          </td>
                                         </ng-container>
-                                    </div>
-                                </div>
-
-                                <div class="container">
-
-                                </div>
-
-
-
-
-
-
-                            </div>
+                                      </tr>
+                                    </ng-container>
+                                  </ng-container>
+                                </table>
+                              </div>
+                              
+                            
                             <div class="ticket-box-available">
                                 <input type="checkbox" />
                                 <span>Available</span>
@@ -69,43 +56,46 @@
                                 <input type="checkbox" />
                                 <span>Selected</span>
                             </div>
-                            <a href="#" class="theme-btn">Previous</a>
-                            <a href="#" class="theme-btn">Next</a>
+                           
                         </div>
                     </div>
                     <div class="col-lg-3 offset-lg-1">
-                        <!-- <div class="buy-ticket-box mtr-30">
+                        <div class="buy-ticket-box mtr-30">
                             <h4>Your Information</h4>
                             <ul>
                                 <li>
-                                    <b>nombre places</b>
-                                    <input type="number" name="" id="">
+                                    <p>nombre places</p>
+                                    <span>{{lengthPlace}}</span>
+                                </li>
+                                <li>
+                                    <p>date</p>
+                                    <span>{{projection.dateProjection}}</span>
                                 </li>
                                 <li>
                                     <p>Time</p>
-                                    <span>2018.07.09 20:40</span>
+                                    <span>{{projection.timeProjection}}</span>
                                 </li>
                                 <li>
                                     <p>Movie name</p>
-                                    <span>Home Alone</span>
+                                    <span>{{projection.filmdto?.nomFilm}}</span>
                                 </li>
                                 <li>
-                                    <p>Ticket number</p>
-                                    <span>2 Adults, 2 Children, 2 Seniors</span>
+                                    <p>salle</p>
+                                    <span>{{projection.salledto?.nomSalle}}</span>
                                 </li>
                                 <li>
                                     <p>Price</p>
-                                    <span>89$</span>
+                                    <span>{{projection.tarifProjection}}</span>
                                 </li>
                             </ul>
-                        </div> -->
+                        </div> 
 
-                        <div [formGroup]="reservationFormGroup" class="form-group row mb-3">
+                        <!-- <div [formGroup]="reservationFormGroup" class="form-group row mb-3">
                             <div class="col">
                                 <label for="exampleFormControlInput1">Nombre Places</label>
-                                <!-- <input type="number" [(ngModel)]="nombreP" /> ---------------------->
-                                <!-- <input class="form-control" id="nbrPlaces" required formControlName="nbrPlaces"
-                                    name="nbrPlaces" type="text" />-->
+                               <input type="number" [(ngModel)]="nombreP" /> 
+                                 <input class="form-control" id="nbrPlaces" required formControlName="nbrPlaces"
+                                    name="nbrPlaces" type="text" />
                                 <input type="number" [(ngModel)]="nombreP" formControlName="nbPlaces" />
 
                             </div>
@@ -121,7 +111,7 @@
                                 </option>
                             </select>
 
-                        </div>
+                        </div> -->
 
                         <button class="btn btn-primary" (click)="addReservation()">add</button>
                     </div>

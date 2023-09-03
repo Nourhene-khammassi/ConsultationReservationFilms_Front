@@ -5,6 +5,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { PlacesService } from '../services/places.service';
 import { Places } from '../models/places';
 import { ReservationService } from '../services/reservation.service';
+import { ProjectionService } from '../services/projection.service';
+import { ActivatedRoute } from '@angular/router';
+import { Projection } from '../models/projection';
+import { formatDate } from '@angular/common';
+import { ReservationDTO } from '../models/ReservationDTO';
 
 @Component({
   selector: 'app-reser',
@@ -16,70 +21,47 @@ export class ReserComponent implements OnInit {
   salle!: Salle[]
   places!: Places[]
   selectedPlace!: Places[]
-
-  reservationFormGroup!: FormGroup
-  reservationFormGroup2!: FormGroup
-  constructor(private salleservice: SalleService, private serviceplace: PlacesService, private serviceReservation: ReservationService, private formBuilder: FormBuilder) { }
+  TabPlace: any[] = [];
+  lengthPlace:any;
+  idprojection:any;
+  projection:any;
+   reservation = new ReservationDTO();
+  constructor(private route: ActivatedRoute, private projectionService:ProjectionService , private serviceplace: PlacesService, private serviceReservation: ReservationService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.salleservice.findAll().subscribe({
-      next: data => {
-        this.salle = data;
-        console.log(this.salle)
-      }
+    this.route.params.subscribe(data => {
+      this.idprojection = data['idProjection']
+      
+    this.projectionService.findById(this.idprojection).subscribe(datap=>{
+      this.projection=datap;
+      console.log(this.projection)
     })
+    });
     this.serviceplace.findAll().subscribe({
       next: data => {
         this.places = data;
         console.log(this.places)
       }
     })
-    this.reservationFormGroup = this.formBuilder.group({
-      idReservation: ['', Validators.required],
-      nbPlaces: [0, Validators.required], // Initialisez nbPlaces avec une valeur par défaut (0 dans cet exemple).
-      dateReservation: ['', Validators.required],
-      salle: ['', Validators.required],
-      places: ['', Validators.required]
-    });
+ 
   }
-  /* this.reservationFormGroup = this.formBuilder.group({
-     idReservation: ['', Validators.required],
-     nbPlaces: ['', Validators.required],
-     dateReservation: ['', Validators.required],
-     salle: ['', Validators.required],
-     places: ['', Validators.required]
-   });
- }*/
-  /*this.reservationFormGroup = new FormGroup({
-
-    //initialisation des attributs
-    'idReservation': new FormControl('', Validators.required),
-    'nbPlaces': new FormControl('', Validators.required),
-    'dateReservation': new FormControl('', Validators.required),
-    'salle': new FormControl('', Validators.required),
-    'places': new FormControl('', Validators.required),
+ 
 
 
-  });*/
-  // on utilissent filmFormGroup2 : pour update et details 
-
-
-  nombreP: any
+  
   addReservation() {
-    const form = {
-      idReservation: this.reservationFormGroup.value.idReservation,
-      nbPlaces: this.nombreP,
-      dateReservation: this.reservationFormGroup.value.dateReservation,
-      salle: this.reservationFormGroup.value.salle,
-      places: this.TabPlace
-
-
-    }
+    const currentDate = new Date();
+  const formattedDate = formatDate(currentDate, 'yyyy-MM-dd', 'en-US');
+  this.reservation.dateReservation=formattedDate
+  this.reservation.nbPlaces=this.lengthPlace
+  this.reservation.projection=this.projection
+  this.reservation.places=this.TabPlace
+    
     console.log(this.selectedPlace)
 
-    console.log("test", form)
+    console.log("test", this.reservation)
 
-    this.serviceReservation.addReservation(form)
+    this.serviceReservation.addReservation(this.reservation)
       .subscribe({
         next: (res) => {
           alert("ok")
@@ -88,10 +70,21 @@ export class ReserComponent implements OnInit {
 
   }
 
-  TabPlace: any[] = [];
 
-  addToTable(places: any) {
-    this.TabPlace.push(places)
+
+
+  addToTable(place: any) {
+    const placeIndex = this.TabPlace.indexOf(place);
+
+    if (placeIndex === -1) {
+      // Place not in the array, add it
+      this.TabPlace.push(place);
+    } else {
+      // Place is in the array, remove it
+      this.TabPlace.splice(placeIndex, 1);
+    }
+    this.lengthPlace=this.TabPlace.length;
     console.log(this.TabPlace)
   }
+  
 }
