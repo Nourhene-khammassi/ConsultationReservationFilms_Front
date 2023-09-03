@@ -1,0 +1,312 @@
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container " id="main-container">
+        <!--nav bar Liste des films-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href="projections"><b><i class="si si-layers"></i> Liste des Projections</b></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!--button ajouter film -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#addProjectionModal"><i class="si si-plus"></i> Ajouter </button>
+                </div>
+
+
+            </div>
+            <div class="container-fluid" id="searchbar">
+                <!-- <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher professeurs..." required>-->
+            </div>
+        </nav>
+
+        <!--Table film avec les champs -->
+        <div class="col-md-12">
+            <table class="table">
+                <thead class="thead-dark">info
+                    <tr>
+                    <tr>
+                        <th scope="col">id Projection</th>
+                        <th scope="col">nom Film</th>
+                        <th scope="col"> nom salle</th>
+                        <th scope="col">Date Projection</th>
+                        <th scope="col">Tarif projection</th>
+                        <th scope="col">time projection</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let projection of projectionList " class="tab-sub">
+                        <td>{{projection.idProjection}}</td>
+                        <td>{{projection.filmdto.nomFilm}} </td>
+                        <td>{{projection.salledto.nomSalle}}</td>
+                        <td>{{projection.dateProjection | date:'shortDate'}}</td>
+                        <td>{{projection.tarifProjection}}</td>
+                        <td>{{projection.timeProjection}}</td>
+
+
+                        <td>
+                            <!---Les buttons-->
+                            <button type="button" class="btn btn-warning  m-1" data-mdb-ripple-color="dark"
+                                data-toggle="modal" data-target="#updateprojectionModal"
+                                (click)="getProjection(projection.idProjection) ">Details</button>
+
+                            <!--<button type="button" class="btn btn-danger btn-floating me-1"
+                                (click)="deleteFilm(film.idFilm)"><i class="fa-duotone fa-trash"></i>
+
+                            </button>-->
+                            <button type="button" class="btn btn-danger m-1"
+                                (click)="deleteProjection(projection.idProjection)">Delete</button>
+
+                            <!--<button type="button" class="btn btn-success btn-floating me-1" data-toggle="modal"
+                                data-target="#viewfilmModal" (click)="viewFilm(film.idFilm)"><i class="si si-eye"></i>
+                            </button>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal Add projection -->
+    <div class="modal fade" id="addProjectionModal" tabindex="-1" role="dialog" aria-labelledby="addProjectionModalName"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProjectionModalName">Ajout du Projection </h5>
+                    <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form add -->
+                    <form [formGroup]="projectionFormGroup">
+
+
+                        <!-- <div class="col">
+                                <label for="exampleFormControlInput1">salle</label>
+                                <select class="custom-select" formControlName="idSalle" name="dateProjection">
+                                    <option *ngFor="let salle of salleList" [value]="salle.idSalle">{{salle.nomSalle}}
+                                    </option>
+                                </select>
+                            </div>-->
+                        <div class="form-group row mb-3">
+                            <div class="col ">
+                                <label for="salledto">Salle</label>
+                                <select class="form-control" id="salledto" required formControlName="salledto"
+                                    name="salledto" type="string">
+                                    <option *ngFor="let salledto of salleList" [ngValue]="salledto">
+                                        {{salledto.nomSalle}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup.get('salledto')?.invalid && projectionFormGroup.get('salledto')?.touched"
+                                    class="text-danger">salle est obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="filmdto">Film</label>
+                                <select class="form-control" id="filmdto" required formControlName="filmdto"
+                                    name="filmdto" type="string">
+                                    <option *ngFor="let filmdto of filmList" [ngValue]="filmdto">
+                                        {{filmdto.nomFilm}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup.get('filmdto')?.invalid && projectionFormGroup.get('filmdto')?.touched"
+                                    class="text-danger">film est obligatoire</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">date projection</label>
+                                <input class="form-control" id="dateProjection" required
+                                    formControlName="dateProjection" name="dateProjection" type="date" />
+                                <small *ngIf="submitted && projectionFormGroup.get('dateProjection')?.invalid"
+                                    class="text-danger">dateProjection est obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">tarifProjection</label>
+                                <input class="form-control" id="tarifProjection" required
+                                    formControlName="tarifProjection" name="tarifProjection" type="string" />
+                                <small *ngIf="submitted && projectionFormGroup.get('tarifProjection')?.invalid"
+                                    class="text-danger">tarifProjection est obligatoire</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">timeProjection</label>
+                                <input class="form-control" id="timeProjection" required
+                                    formControlName="timeProjection" name="timeProjection" type="time" />
+                                <small *ngIf="submitted && projectionFormGroup.get('timeProjection')?.invalid"
+                                    class="text-danger">timeProjection obligatoire</small>
+                            </div>
+
+                        </div>
+                        <button class="btn btn-primary" (click)="addProjection()">Ajouter Projection</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Update projection -->
+    <div class="modal fade" id="updateprojectionModal" tabindex="-1" role="dialog"
+        aria-labelledby="updateprojectionModalName" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateprojectionModalName">Modification du projection </h5>
+                    <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form update -->
+                    <form [formGroup]="projectionFormGroup2">
+                        <div class="form-group row mb-3">
+                            <div class="col " *ngIf="showData" (click)="editDataa()">
+                                <label for="salledto">Salle</label>
+                                <select class="form-control" id="salledto" required formControlName="salledto.nomSalle"
+                                    name="salledto" type="string">
+                                    <option *ngFor="let salledto of salleList" [ngValue]="salledto.nomSalle">
+                                        {{salledto.nomSalle}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup2.get('salledto')?.invalid && projectionFormGroup2.get('salledto')?.touched"
+                                    class="text-danger">salle est obligatoire</small>
+                            </div>
+                            <!--list-->
+                            <div class="col " *ngIf="editData">
+                                <label for="salledto">Salle</label>
+                                <select class="form-control" id="salledto" required formControlName="salledto"
+                                    name="salledto" type="string">
+                                    <option *ngFor="let salledto of salleList" [ngValue]="salledto">
+                                        {{salledto.nomSalle}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup2.get('salledto')?.invalid && projectionFormGroup2.get('salledto')?.touched"
+                                    class="text-danger">salle est obligatoire</small>
+                            </div>
+
+
+
+
+                            <div class="col" *ngIf="showDataFilm" (click)="editDataFilm()">
+                                <label for="filmdto">Film</label>
+                                <select class="form-control" id="filmdto" required formControlName="filmdto.nomFilm"
+                                    name="filmdto" type="string">
+                                    <option *ngFor="let filmdto of filmList" [ngValue]="filmdto.nomFilm">
+                                        {{filmdto.nomFilm}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup2.get('filmdto')?.invalid && projectionFormGroup2.get('filmdto')?.touched"
+                                    class="text-danger">film est obligatoire</small>
+                            </div>
+
+
+                            <div class="col" *ngIf="editDataFilms">
+                                <label for="filmdto">Film</label>
+                                <select class="form-control" id="filmdto" required formControlName="filmdto"
+                                    name="filmdto" type="string">
+                                    <option *ngFor="let filmdto of filmList" [ngValue]="filmdto">
+                                        {{filmdto.nomFilm}}</option>
+                                </select>
+                                <small
+                                    *ngIf="projectionFormGroup2.get('filmdto')?.invalid && projectionFormGroup2.get('filmdto')?.touched"
+                                    class="text-danger">film est obligatoire</small>
+                            </div>
+
+                        </div>
+                        <div class="form-group row mb-3">
+                            <!-- <div class="col">
+                                <label for="exampleFormControlInput1">dateProjection</label>
+                                <input class="form-control" id="dateProjection" required
+                                    formControlName="dateProjection" name="dateProjection" type="date" />
+                                <small *ngIf="submitted && projectionFormGroup2.get('dateProjection')?.invalid"
+                                    class="text-danger">dateProjection est obligatoire</small>
+                            </div> -->
+
+
+                            <div class="col">
+                                <label for="exampleFormControlInput1">dateProjection</label>
+                                <input class="form-control" id="dateProjection" required
+                                    formControlName="dateProjection" name="dateProjection" type="date" #dateProjection
+                                    value="{{projection.dateProjection}} | date:'yyyy-MM-dd'" />
+                                <small *ngIf="submitted && projectionFormGroup2.get('dateProjection')?.invalid"
+                                    class="text-danger">dateProjection est obligatoire</small>
+                            </div>
+
+
+                            <!-- <div class="col">
+                                <label for="exampleFormControlInput1">Date film</label>
+                                <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                    formControlName="dateFilm" name="dateFilm" type="date" #dateFilm
+                                    value="{{film.dateFilm}} | date:'yyyy-MM-dd'" />
+                                <small *ngIf="submitted && filmFormGroup2.get('dateFilm')?.invalid"
+                                    class="text-danger">Date est obligatoire</small>
+                            </div> -->
+
+
+
+
+                            <!-- <div class="form-group row mb-3">
+                                <div class="col">
+                                    <label for="exampleFormControlInput1">Date film</label>
+                                    <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                        formControlName="dateFilm" name="dateFilm" type="date" #dateFilm
+                                        value="{{film.dateFilm}} | date:'yyyy-MM-dd'" />
+                                    <small *ngIf="submitted && filmFormGroup2.get('dateFilm')?.invalid"
+                                        class="text-danger">Date est obligatoire</small>
+                                </div>
+
+                            </div> -->
+
+
+
+
+
+
+
+
+
+
+                            <div class="col">
+                                <label for="exampleFormControlInput1">tarifProjection</label>
+                                <input class="form-control" id="tarifProjection" required
+                                    formControlName="tarifProjection" name="tarifProjection" type="string"
+                                    [(ngModel)]="projectionModel.tarifProjection" />
+                                <small *ngIf="submitted && projectionFormGroup2.get('tarifProjection')?.invalid"
+                                    class="text-danger">projection est obligatoire</small>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">timeProjection</label>
+                                <input class="form-control" id="timeProjection" required
+                                    formControlName="timeProjection" name="timeProjection" type="time" />
+                                <small *ngIf="submitted && projectionFormGroup2.get('timeProjection')?.invalid"
+                                    class="text-danger">timeProjection obligatoire</small>
+                            </div>
+
+                        </div>
+
+
+                        <button class="btn btn-primary" (click)="updateProjection()">modifier</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!-- main-content closed -->

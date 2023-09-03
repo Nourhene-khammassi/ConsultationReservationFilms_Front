@@ -1,0 +1,41 @@
+.topnav a:hover {
+    border-bottom: 3px solid red;
+}
+
+.navbar {
+    background-color: #1c0a0a;
+}
+
+.white-text {
+    color: white !important;
+    /* Utilisation de !important pour s'assurer que la couleur est appliquée */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 700px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 900px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1300px;
+    }
+}

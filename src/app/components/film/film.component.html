@@ -1,0 +1,316 @@
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container" id="main-container">
+        <!--nav bar Liste des films-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href="films"><b><i class="si si-layers"></i> Liste des films</b></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!--button ajouter film -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addfilmModal"><i
+                            class="si si-plus"></i> Ajouter </button>
+                </div>
+
+
+            </div>
+            <div class="container-fluid" id="searchbar">
+                <!-- <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher professeurs..." required>-->
+            </div>
+        </nav>
+
+        <!--Table film avec les champs -->
+        <div class="col-md-12">
+            <table class="table">
+                <thead class="thead-dark">info
+                    <tr>
+                    <tr>
+                        <th scope="col">idfFilm</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">NomFilm</th>
+                        <th scope="col"> Categorie</th>
+
+                        <th scope="col">Createur</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">duréeFilm</th>
+                        <th scope="col">dateF</th>
+
+                        <th scope="col">actif</th>
+                        <th scope="col"></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let film of filmList " class="tab-sub">
+                        <td>{{film.idFilm}}</td>
+                        <td><img (error)="changeSource($event)" [src]="film.image" class="" width="50px"
+                                height="50px" /></td>
+                        <td>{{film.nomFilm}}</td>
+                        <td>{{film.category}}</td>
+                        <td>{{film.createur}} </td>
+                        <td> {{film.description}}</td>
+                        <td> {{film.dureeFilm}}</td>
+                        <td> {{film.dateFilm| date:'yyyy-MM-dd'}}</td>
+
+                        <td>{{film.actif}}</td>
+
+
+                        <td>
+                            <!---Les buttons-->
+                            <button type="button" class="btn btn-warning  m-1" data-mdb-ripple-color="dark"
+                                data-toggle="modal" data-target="#updatefilmModal"
+                                (click)="getFilm(film.idFilm) ">Details</button>
+
+                            <!--<button type="button" class="btn btn-danger btn-floating me-1"
+                                (click)="deleteFilm(film.idFilm)"><i class="fa-duotone fa-trash"></i>
+
+                            </button>-->
+                            <button type="button" class="btn btn-danger m-1"
+                                (click)="deleteFilm(film.idFilm)">Delete</button>
+
+                            <!--<button type="button" class="btn btn-success btn-floating me-1" data-toggle="modal"
+                                data-target="#viewfilmModal" (click)="viewFilm(film.idFilm)"><i class="si si-eye"></i>
+                            </button>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal Add film -->
+    <div class="modal fade" id="addfilmModal" tabindex="-1" role="dialog" aria-labelledby="addfilmModalName"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addfilmModalName">Ajout du Film </h5>
+                    <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form add -->
+                    <form [formGroup]="filmFormGroup">
+                        <div class="form-group row mb-3 align-items-center justify-content-center">
+                            <!--<button (click)="fileInput.click()" style="background-color: transparent; border: none;">
+                                <img (error)="changeSource($event)" [src]="imgUrl" class="" width="100px"
+                                    height="100px" />
+                                <input type="file" #fileInput (change)="onFileInput(fileInput.files)"
+                                    formControlName="image" name="image">
+                            </button>-->
+                            <div class="pl-7">
+                                <img (error)="changeSource($event)" [src]="imgUrl" class="" width="100px"
+                                    height="100px" />
+                                <br>
+                                <input type="file" #fileInput (change)="onFileInput(fileInput.files)"
+                                    formControlName="image" name="image">
+                            </div>
+                            <small *ngIf="submitted && filmFormGroup.get('image')?.invalid" class="text-danger">Image
+                                est obligatoire</small>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">Nom film</label>
+                                <input class="form-control" id="nomFilm" required formControlName="nomFilm"
+                                    name="nomFilm" type="string" />
+                                <small *ngIf="submitted && filmFormGroup.get('nomFilm')?.invalid"
+                                    class="text-danger">Nom est obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">createur</label>
+                                <input class="form-control" id="createur" required formControlName="createur"
+                                    name="createur" type="string" />
+                                <small *ngIf="submitted && filmFormGroup.get('createur')?.invalid"
+                                    class="text-danger">createur est obligatoire</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">description</label>
+                                <input class="form-control" id="description" required formControlName="description"
+                                    name="description" type="string" />
+                                <small *ngIf="submitted && filmFormGroup.get('description')?.invalid"
+                                    class="text-danger">description obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">dureeFilm</label>
+                                <input class="form-control" id="dureeFilm" required formControlName="dureeFilm"
+                                    name="dureeFilm" type="string" />
+                                <small *ngIf="submitted && filmFormGroup.get('dureeFilm')?.invalid"
+                                    class="text-danger">description obligatoire</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">category</label>
+                                <select class="form-control" id="category" required formControlName="category"
+                                    name="category" type="string">
+                                    <option value="Comédie">Comédie</option>
+                                    <option value="Drame">Drame</option>
+                                    <option value="Fantastique">Fantastique</option>
+                                </select>
+                                <small
+                                    *ngIf="filmFormGroup.get('category')?.invalid && filmFormGroup.get('category')?.touched"
+                                    class="text-danger">category est obligatoire</small>
+                            </div>
+
+                            <div class="col">
+                                <label for="exampleFormControlInput1">film actif</label>
+                                <label class="containerr">
+                                    <input class="d-none" checked="checked" type="checkbox" id="actif"
+                                        formControlName="actif" name="actif" value="true">
+                                    <div class="checkmark"></div>
+                                </label>
+                            </div>
+
+                            <!-- <div class="col">
+                                <label for="exampleFormControlInput1">Date film</label>
+                                <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                    name="dateFilm" type="date" />
+                                <small *ngIf="submitted && filmFormGroup.get('dateFilm')?.invalid"
+                                    class="text-danger">description obligatoire</small>
+
+                            </div>-->
+                        </div>
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">Date film</label>
+                                <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                    formControlName="dateFilm" name="dateFilm" type="date" #dateFilm
+                                    value="{{film.dateFilm}} | date:'yyyy-MM-dd'" />
+                                <small *ngIf="submitted && filmFormGroup.get('dateFilm')?.invalid"
+                                    class="text-danger">Date est obligatoire</small>
+                            </div>
+
+                        </div>
+
+
+                        <button class="btn btn-primary" (click)="addFilm()">Ajouter Film</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Update film -->
+    <div class="modal fade" id="updatefilmModal" tabindex="-1" role="dialog" aria-labelledby="updatefilmModalName"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updatefilmModalName">Modification du film </h5>
+                    <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form update -->
+                    <form [formGroup]="filmFormGroup2">
+                        <div class="form-group row mb-3">
+                            <button (click)="fileInput.click()" style="background-color: transparent; border: none;">
+                                <img (error)="changeSource($event)" [src]="imgUrl" class="" width="100px"
+                                    height="100px" />
+                                <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)"
+                                    formControlName="Modal.image" name="image" [value]="filmFormGroup2.get('image')">
+                            </button>
+                            <small *ngIf="submitted && filmFormGroup2.get('image')?.invalid" class="text-danger">Image
+                                est obligatoire</small>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">Nom film</label>
+                                <input class="form-control" id="nomFilm" required formControlName="nomFilm"
+                                    name="nomFilm" type="string" />
+                                <small *ngIf="submitted && filmFormGroup2.get('nomFilm')?.invalid"
+                                    class="text-danger">Nom est obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">createur</label>
+                                <input class="form-control" id="createur" required formControlName="createur"
+                                    name="createur" type="string" [(ngModel)]="filmModel.createur" />
+                                <small *ngIf="submitted && filmFormGroup2.get('createur')?.invalid"
+                                    class="text-danger">createur est obligatoire</small>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">description</label>
+                                <input class="form-control" id="description" required formControlName="description"
+                                    name="description" type="string" />
+                                <small *ngIf="submitted && filmFormGroup2.get('description')?.invalid"
+                                    class="text-danger">description obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">dureeFilm</label>
+                                <input class="form-control" id="dureeFilm" required formControlName="dureeFilm"
+                                    name="dureeFilm" type="string" />
+                                <small *ngIf="submitted && filmFormGroup2.get('dureeFilm')?.invalid"
+                                    class="text-danger">dureeFilm obligatoire</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">category</label>
+                                <select class="form-control" id="category" required formControlName="category"
+                                    name="category" type="string">
+                                    <option value="Comédie">Comédie</option>
+                                    <option value="Drame">Drame</option>
+                                    <option value="Fantastique">Fantastique</option>
+                                </select>
+                                <small
+                                    *ngIf="filmFormGroup2.get('category')?.invalid && filmFormGroup2.get('category')?.touched"
+                                    class="text-danger">category est obligatoire</small>
+                            </div>
+
+                            <div class="col">
+                                <label for="exampleFormControlInput1">film actif</label>
+                                <input class="form-control" id="actif" required formControlName="actif" name="actif"
+                                    type="checkbox" value="true" />
+                            </div>
+                            <!--<div class="col">
+                                <label for="exampleFormControlInput1">Date film</label>
+                                <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                    name="dateFilm" type="date" />
+                                <small *ngIf="submitted && filmFormGroup2.get('dateFilm')?.invalid"
+                                    class="text-danger">dureeFilm obligatoire</small>
+
+                            </div>-->
+
+                            <div class="form-group row mb-3">
+                                <div class="col">
+                                    <label for="exampleFormControlInput1">Date film</label>
+                                    <input class="form-control" id="dateFilm" required formControlName="dateFilm"
+                                        formControlName="dateFilm" name="dateFilm" type="date" #dateFilm
+                                        value="{{film.dateFilm}} | date:'yyyy-MM-dd'" />
+                                    <small *ngIf="submitted && filmFormGroup2.get('dateFilm')?.invalid"
+                                        class="text-danger">Date est obligatoire</small>
+                                </div>
+
+                            </div>
+
+                            <button class="btn btn-primary" (click)="updateFilm()">modifier</button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!-- main-content closed -->

@@ -1,0 +1,8 @@
+.login-img img {
+    width: 10%;
+    max-height: 20%;
+}
+
+.btnLogin {
+    background-color: rgb(216, 109, 22)
+}

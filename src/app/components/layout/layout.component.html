@@ -1,0 +1,139 @@
+<!-- Page loader -->
+
+<!-- header section start -->
+
+
+<ng-container *ngIf="filmnew">
+    <!-- hero area start -->
+
+    <section class="hero-area" id="home">
+        <div class="container">
+            <div class="hero-area-slider">
+                <div class="row hero-area-slide">
+                    <div class="col-lg-6 col-md-5">
+                        <div class="hero-area-content">
+                            <img [src]="filmnew?.image" alt="about" />
+                        </div>
+                    </div>
+                    <!----filmnew : donne un seul film / film prend list films-->
+                    <div class="col-lg-6 col-md-7">
+                        <div class="hero-area-content pr-50">
+                            <h2>{{filmnew.nomFilm}}</h2>
+                            <div class="review d-flex justify-content-between mr-3 ">
+                                <p class="pCategory">{{filmnew.category}}</p>
+
+
+                                <P>{{filmnew.dureeFilm}}</P>
+                            </div>
+                            <p>{{filmnew.description}}</p>
+
+
+                            <div class="slide-trailor">
+                                <h3>Movie reservation</h3>
+                                <a class="theme-btn theme-btn2" (click)="goToresvation(filmnew.idFilm)"><i
+                                        class="icofont icofont-play"></i>
+                                    Tickets</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </section>
+    <!-- hero area end -->
+    <!-- portfolio section start -->
+    <section class="portfolio-area pt-60">
+        <div class="container">
+            <div class="row flexbox-center">
+                <div class="col-lg-6 text-center text-lg-left">
+                    <div class="section-title">
+                        <h1><i class="icofont icofont-movie"></i> Spotlight This Month</h1>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center text-lg-right ">
+                    <div class="portfolio-menu ">
+                        <ul>
+                            <li class="active ">Films</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row portfolio-item">
+                        <!-- card -->
+                        <div *ngFor="let film of filmList" class="col-md-3 col-sm-6 soon released">
+                            <div class="single-portfolio" routerLink="/resrvationfilm/">
+                                <div class="single-portfolio-img">
+                                    <img style="height: 410px;" [src]="film.image" alt="portfolio"
+                                        (click)="goToresvation(film.idFilm)" />
+
+                                </div>
+                                <div class="portfolio-content">
+                                    <h2>{{film.nomFilm}}</h2>
+                                    <div class="review d-flex justify-content-between mr-3 ">
+
+                                        <p class="pCategory">{{film.category}}</p>
+                                        <P>{{film.dureeFilm}}</P>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end card -->
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <br> <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+    </section><!-- portfolio section end -->
+
+    <section class="news">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title pb-20">
+                        <h1><i class="icofont icofont-coffee-cup"></i> Latest News</h1>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="news-slide-area">
+            <div class="news-slider" *ngIf="listFilmNew && listFilmNew.length > 0">
+                <!-- card news -->
+                <!-- card news    : let chaque elemet dans liste film parcour de chaque film / film contient plusi-->
+                <div *ngFor="let film of listFilmNew" class="single-news">
+                    <div *ngIf="film && film.image"><img [src]="film?.image" alt=""></div>
+                    <div class="news-date">
+                        <h2><span>{{ film.dateFilm | date:'MMM' }}</span> {{ film.dateFilm | date:'dd' }}</h2>
+                        <h1>{{ film.dateFilm | date:'yyyy' }}</h1>
+                    </div>
+                    <div class="news-content">
+                        <h2>The Witch Queen</h2>
+                        <p>Witch Queen is a tall woman with a slim build. She has pink hair, which is pulled up under
+                            her hat, and teal eyes.</p>
+                    </div>
+                    <a routerLink="/reservationFilm/:idFilm">Read More</a>
+                </div>
+                <!-- end card news -->
+
+
+            </div>
+
+        </div>
+    </section><!-- news section end -->
+</ng-container>

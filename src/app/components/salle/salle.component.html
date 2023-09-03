@@ -1,0 +1,202 @@
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container" id="main-container">
+        <!--nav bar Liste des films-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" href="salle"><b><i class="si si-layers"></i> Liste des salles</b></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!--button ajouter salle -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSalleModal"><i
+                            class="si si-plus"></i> Ajouter </button>
+                </div>
+
+
+            </div>
+            <div class="container-fluid" id="searchbar">
+                <!-- <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher professeurs..." required>-->
+            </div>
+        </nav>
+
+        <!--Table film avec les champs -->
+        <div class="col-md-12">
+            <table class="table">
+                <thead class="thead-dark">info
+                    <tr>
+                    <tr>
+                        <th scope="col">id salle</th>
+                        <th scope="col">nom salle</th>
+                        <th scope="col">nombre places</th>
+                        <th scope="col"></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let salle of salleList " class="tab-sub">
+                        <td>{{salle.idSalle}}</td>
+                        <td>{{salle.nomSalle}}</td>
+                        <td>{{salle.nbrPlaces}}</td>
+
+
+
+                        <td>
+                            <!---Les buttons-->
+                            <button type="button" class="btn btn-warning  m-1" data-mdb-ripple-color="dark"
+                                data-toggle="modal" data-target="#updatesalleModal"
+                                (click)="getSalle(salle.idSalle) ">Modication</button>
+
+                            <!--<button type="button" class="btn btn-danger btn-floating me-1"
+                                (click)="deleteFilm(film.idFilm)"><i class="fa-duotone fa-trash"></i>
+
+                            </button>-->
+                            <button type="button" class="btn btn-danger m-1"
+                                (click)="deleteSalle(salle.idSalle)">Delete</button>
+
+                            <button type="button" class="btn btn-success btn-floating m-1" data-toggle="modal"
+                                data-target="#viewSalleModal" (click)="viewSalle(salle.idSalle)">Details
+                            </button>
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal Add salle -->
+    <div class="modal fade" id="addSalleModal" tabindex="-1" role="dialog" aria-labelledby="addSalleModalName"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSalleModalName">Ajout du Projection </h5>
+                    <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form add -->
+                    <form [formGroup]="salleFormGroup">
+
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">nom salle</label>
+                                <input class="form-control" id="nomSalle" required formControlName="nomSalle"
+                                    name="nomSalle" type="text" />
+                                <small *ngIf="submitted && salleFormGroup.get('nomSalle')?.invalid"
+                                    class="text-danger">nomSalle est obligatoire</small>
+                            </div>
+                            <div class="col">
+                                <label for="exampleFormControlInput1">nombre places</label>
+                                <input class="form-control" id="nbrPlaces" required formControlName="nbrPlaces"
+                                    name="nbrPlaces" type="text" />
+                                <small *ngIf="submitted && salleFormGroup.get('nbrPlaces')?.invalid"
+                                    class="text-danger">nbrPlaces est obligatoire</small>
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-primary" (click)="addSalle()">Ajouter salle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Update salle -->
+    <div class="modal fade" id="updatesalleModal" tabindex="-1" role="dialog"
+        aria-labelledby="updateprojectionModalName" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updatesalleModal">Modification du salles </h5>
+                    <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-md-12">
+                    <!-- form update -->
+                    <form [formGroup]="salleFormGroup2">
+
+                        <div class="form-group row mb-3">
+                            <div class="col">
+                                <label for="exampleFormControlInput1">nomSalle</label>
+                                <input class="form-control" id="nomSalle" required formControlName="nomSalle"
+                                    name="nomSalle" type="text" (value)="salleModel.nomSalle" />
+                                <small *ngIf="submitted && salleFormGroup2.get('nomSalle')?.invalid"
+                                    class="text-danger">nomSalle est obligatoire</small>
+
+
+
+
+
+
+                            </div>
+                            <!--<div class="col">
+                                <label for="exampleFormControlInput1">nbrPlaces</label>
+                                <input class="form-control" id="nbrPlaces" required formControlName="nbrPlaces"
+                                    name="nbrPlaces" type="text" [(ngModel)]="salleModel.nbrPlaces" />
+                                <small *ngIf="submitted && salleFormGroup2.get('nbrPlaces')?.invalid"
+                                    class="text-danger">nbrPlaces est obligatoire</small>
+                            </div>-->
+                            <div class="col">
+                                <label for="exampleFormControlInput1">nbrPlaces</label>
+                                <input class="form-control" id="nbrPlaces" required formControlName="nbrPlaces"
+                                    name="nbrPlaces" type="number" />
+                                <small *ngIf="submitted && salleFormGroup2.get('nbrPlaces')?.invalid"
+                                    class="text-danger">nbrPlaces est obligatoire</small>
+                            </div>
+                        </div>
+
+
+
+
+                        <button class="btn btn-primary" (click)="updateSalle()">modifier</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!-- main-content closed -->
+
+<!-- Modal View Teacher -->
+<div class="modal fade" id="viewSalleModal" tabindex="-1" role="dialog" aria-labelledby="viewSalleModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewSalleModal">Détails du salle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- form View -->
+
+                <div class="detailSalle">
+                    <b>nom salle est : </b>{{salle!.nomSalle}}
+                    <br>
+                    <b>nombre places : </b>{{salle!.nbrPlaces}}
+
+                </div>
+
+            </div>
+        </div>
+    </div>

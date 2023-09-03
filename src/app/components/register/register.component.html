@@ -1,0 +1,55 @@
+<!------ Include the above in your HEAD tag <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+---------->
+<div></div>
+<app-header></app-header>
+<section class="breadcrumb-area">
+    <div class="container">
+
+        <div class="row text-center">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="login-title">
+                            <h4>Sign up</h4>
+                        </div>
+                        <div class="alert alert-danger" *ngIf="errorMsg">
+                            {{errorMsg}}
+                        </div>
+                        <div class="login-form mt-4">
+                            <form method="post" action="#">
+                                <div class="form-row">
+
+
+
+                                    <div class="form-group col-md-12">
+                                        <input type="fullname" class="form-control form-control-user" name="fullname"
+                                            id="exampleInputFullname" placeholder="fullname"
+                                            [(ngModel)]="registerRequest.fullname">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <input type="email" class="form-control form-control-user" name="email"
+                                            id="exampleInputEmail" placeholder="email"
+                                            [(ngModel)]="registerRequest.email">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            id="exampleInputPassword" placeholder="Password"
+                                            [(ngModel)]="registerRequest.password">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-row">
+                                    <button class="btn btn-danger btn-block btnn" (click)="register()">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
